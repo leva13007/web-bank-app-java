@@ -1,8 +1,9 @@
-package org.zloyleve.server;
+package org.zloyleva.server;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import org.zloyleva.controller.RegistrationController;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,7 +17,7 @@ public class WebServer {
 
     server.createContext("/", new HomeHandler());
     server.createContext("/login", new LoginHandler());
-    server.createContext("/register", new RegisterHandler());
+    server.createContext("/registration", new RegistrationController());
     server.createContext("/logout", new HomeHandler());
 
 
@@ -103,51 +104,6 @@ public class WebServer {
           </html>
           """);
       os.write(html.toString().getBytes());
-      os.close();
-    }
-  }
-
-  public static class RegisterHandler implements HttpHandler {
-
-    @Override
-    public void handle(HttpExchange exchange) throws IOException {
-      exchange.sendResponseHeaders(200, 0);
-      OutputStream os = exchange.getResponseBody();
-      String html = """
-          <!doctype html>
-          <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport"
-                      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-                <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                <title>Bank App | Registration form</title>
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-                      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-            </head>
-            <body>
-            <div class="container">
-                <div class="row">
-                    <div class="col">
-                        <form action="/login" method="get">
-                            <h1>Registration form</h1>
-                            <div class="mb-3">
-                                <label for="userName" class="form-label">User name</label>
-                                <input name="userName" type="text" class="form-control" id="userName">
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">Password</label>
-                                <input name="password" type="password" class="form-control" id="exampleInputPassword1">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            </body>
-          </html>
-          """;
-      os.write(html.getBytes());
       os.close();
     }
   }
