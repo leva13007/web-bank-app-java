@@ -23,8 +23,12 @@ public class LoginController  implements HttpHandler  {
     try {
       if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
 
-        Path path = Path.of("src/main/resources/templates/", "login.html");
-        String html = Files.readString(path);
+        Path pathHeader = Path.of("src/main/resources/templates/", "header.html");
+        Path pathContent = Path.of("src/main/resources/templates/", "login.html");
+        Path pathFooter = Path.of("src/main/resources/templates/", "footer.html");
+        String html = Files.readString(pathHeader);
+        html += Files.readString(pathContent);
+        html += Files.readString(pathFooter);
 
         byte[] bytes = html.getBytes();
         exchange.sendResponseHeaders(200, bytes.length);
@@ -58,8 +62,12 @@ public class LoginController  implements HttpHandler  {
             exchange.sendResponseHeaders(302, 0);
             //os.close();
           } else {
-            Path path = Path.of("src/main/resources/templates/", "login.html");
-            String html = Files.readString(path);
+            Path pathHeader = Path.of("src/main/resources/templates/", "header.html");
+            Path pathContent = Path.of("src/main/resources/templates/", "login.html");
+            Path pathFooter = Path.of("src/main/resources/templates/", "footer.html");
+            String html = Files.readString(pathHeader);
+            html += Files.readString(pathContent);
+            html += Files.readString(pathFooter);
 
             String htmlAlert = """
                <div class="alert alert-danger" role="alert">

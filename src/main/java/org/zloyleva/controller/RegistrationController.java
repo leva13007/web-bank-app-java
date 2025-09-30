@@ -23,9 +23,12 @@ public class RegistrationController implements HttpHandler {
     OutputStream os = exchange.getResponseBody();
     try {
       if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-
-        Path path = Path.of("src/main/resources/templates/", "registration.html");
-        String html = Files.readString(path);
+        Path pathHeader = Path.of("src/main/resources/templates/", "header.html");
+        Path pathContent = Path.of("src/main/resources/templates/", "registration.html");
+        Path pathFooter = Path.of("src/main/resources/templates/", "footer.html");
+        String html = Files.readString(pathHeader);
+        html += Files.readString(pathContent);
+        html += Files.readString(pathFooter);
 
         byte[] bytes = html.getBytes();
         exchange.sendResponseHeaders(200, bytes.length);
@@ -59,8 +62,12 @@ public class RegistrationController implements HttpHandler {
             exchange.sendResponseHeaders(302, 0);
             //os.close();
           } else {
-            Path path = Path.of("src/main/resources/templates/", "registration.html");
-            String html = Files.readString(path);
+            Path pathHeader = Path.of("src/main/resources/templates/", "header.html");
+            Path pathContent = Path.of("src/main/resources/templates/", "registration.html");
+            Path pathFooter = Path.of("src/main/resources/templates/", "footer.html");
+            String html = Files.readString(pathHeader);
+            html += Files.readString(pathContent);
+            html += Files.readString(pathFooter);
 
             String htmlAlert = """
                <div class="alert alert-danger" role="alert">
