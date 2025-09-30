@@ -10,21 +10,20 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class RegistrationController implements HttpHandler {
+public class LoginController  implements HttpHandler  {
 
   @Override
   public void handle(HttpExchange exchange) throws IOException {
-
-//    URI: /registration
-//    Method(HTTP): GET
-//    Method(HTTP): POST
-//    System.out.println(exchange.getRequestMethod());
+    //    URI: /login
+    //    Method(HTTP): GET
+    //    Method(HTTP): POST
+    //    System.out.println(exchange.getRequestMethod());
 
     OutputStream os = exchange.getResponseBody();
     try {
       if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
 
-        Path path = Path.of("src/main/resources/templates/", "registration.html");
+        Path path = Path.of("src/main/resources/templates/", "login.html");
         String html = Files.readString(path);
 
         byte[] bytes = html.getBytes();
@@ -59,12 +58,12 @@ public class RegistrationController implements HttpHandler {
             exchange.sendResponseHeaders(302, 0);
             //os.close();
           } else {
-            Path path = Path.of("src/main/resources/templates/", "registration.html");
+            Path path = Path.of("src/main/resources/templates/", "login.html");
             String html = Files.readString(path);
 
             String htmlAlert = """
                <div class="alert alert-danger" role="alert">
-                 Got an error during registration process, call the support team)
+                 Got an error during login process, call the support team)
                </div>
                """;
             html = html.replace("<!-- alert -->", htmlAlert);
