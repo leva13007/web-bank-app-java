@@ -2,29 +2,23 @@ package org.zloyleva.controller;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.zloyleva.utils.ReplacementTable;
+import org.zloyleva.utils.TemplateUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class HomeController implements HttpHandler {
   @Override
   public void handle(HttpExchange exchange) throws IOException {
+    ReplacementTable table = new ReplacementTable();
     //    URI: /registration
     //    Method(HTTP): GET
 
     OutputStream os = exchange.getResponseBody();
     try {
       if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-        Path pathHeader = Path.of("src/main/resources/templates/", "header.html");
-        Path pathContent = Path.of("src/main/resources/templates/", "home.html");
-        Path pathFooter = Path.of("src/main/resources/templates/", "footer.html");
-        String html = Files.readString(pathHeader);
-        html += Files.readString(pathContent);
-        html += Files.readString(pathFooter);
-
-        byte[] bytes = html.getBytes();
+        byte[] bytes = TemplateUtil.getHTMLBytes("home.html", table.getTable());
         exchange.sendResponseHeaders(200, bytes.length);
         os.write(bytes);
       } else {

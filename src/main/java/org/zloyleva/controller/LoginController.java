@@ -2,13 +2,13 @@ package org.zloyleva.controller;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.zloyleva.utils.ReplacementTable;
+import org.zloyleva.utils.TemplateUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class LoginController  implements HttpHandler  {
 
@@ -22,15 +22,8 @@ public class LoginController  implements HttpHandler  {
     OutputStream os = exchange.getResponseBody();
     try {
       if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-
-        Path pathHeader = Path.of("src/main/resources/templates/", "header.html");
-        Path pathContent = Path.of("src/main/resources/templates/", "login.html");
-        Path pathFooter = Path.of("src/main/resources/templates/", "footer.html");
-        String html = Files.readString(pathHeader);
-        html += Files.readString(pathContent);
-        html += Files.readString(pathFooter);
-
-        byte[] bytes = html.getBytes();
+        ReplacementTable table = new ReplacementTable();
+        byte[] bytes = TemplateUtil.getHTMLBytes("login.html", table.getTable());
         exchange.sendResponseHeaders(200, bytes.length);
         os.write(bytes);
       } else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
@@ -52,8 +45,8 @@ public class LoginController  implements HttpHandler  {
             }
           }
 
-          System.out.println(user);
-          System.out.println(password);
+//          System.out.println(user);
+//          System.out.println(password);
           // validations!
 
           if (user != null && password != null) {
@@ -62,21 +55,13 @@ public class LoginController  implements HttpHandler  {
             exchange.sendResponseHeaders(302, 0);
             //os.close();
           } else {
-            Path pathHeader = Path.of("src/main/resources/templates/", "header.html");
-            Path pathContent = Path.of("src/main/resources/templates/", "login.html");
-            Path pathFooter = Path.of("src/main/resources/templates/", "footer.html");
-            String html = Files.readString(pathHeader);
-            html += Files.readString(pathContent);
-            html += Files.readString(pathFooter);
-
-            String htmlAlert = """
+            ReplacementTable table = new ReplacementTable();
+            table.setTableRow("@alert-login", """
                <div class="alert alert-danger" role="alert">
-                 Got an error during login process, call the support team)
+                 Got an error during login process, call the support team)// After replace
                </div>
-               """;
-            html = html.replace("<!-- alert -->", htmlAlert);
-
-            byte[] bytes = html.getBytes();
+               """);
+            byte[] bytes = TemplateUtil.getHTMLBytes("login.html", table.getTable());
             exchange.sendResponseHeaders(200, bytes.length);
             os.write(bytes);
           }
