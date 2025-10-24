@@ -2,6 +2,7 @@ package org.zloyleva.controller;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.zloyleva.service.UserService;
 import org.zloyleva.utils.ReplacementTable;
 import org.zloyleva.utils.ViewUtil;
 
@@ -11,7 +12,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 public class RegistrationController implements HttpHandler {
-
+  UserService userService;
+  public RegistrationController(UserService userService) {
+    this.userService = userService;
+  }
   @Override
   public void handle(HttpExchange exchange) throws IOException {
 
@@ -31,6 +35,7 @@ public class RegistrationController implements HttpHandler {
         String line = reader.readLine();
 
         if (line != null) {
+          // Need to move it to the validator
           String[] result = line.split("&");
           String user = null;
           String password = null;
@@ -48,8 +53,10 @@ public class RegistrationController implements HttpHandler {
           System.out.println(password);
           // validations!
 
-          if (user != null && password != null) {
-            ViewUtil.sendRedirect(exchange);
+          String sessionId = this.userService.registration(user, password);
+          System.out.println(sessionId);
+          if (sessionId != null) {
+            ViewUtil.sendRedirect(exchange, sessionId);
           } else {
             ReplacementTable table = new ReplacementTable();
             table.setTableRow("@alert-registration", """

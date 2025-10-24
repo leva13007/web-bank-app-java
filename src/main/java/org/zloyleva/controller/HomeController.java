@@ -2,6 +2,7 @@ package org.zloyleva.controller;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.zloyleva.service.UserService;
 import org.zloyleva.utils.ReplacementTable;
 import org.zloyleva.utils.ViewUtil;
 
@@ -9,6 +10,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class HomeController implements HttpHandler {
+  UserService userService;
+  public HomeController(UserService userService) {
+    this.userService = userService;
+  }
+
   @Override
   public void handle(HttpExchange exchange) throws IOException {
     ReplacementTable table = new ReplacementTable();
