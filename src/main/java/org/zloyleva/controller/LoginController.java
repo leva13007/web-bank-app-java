@@ -3,7 +3,7 @@ package org.zloyleva.controller;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.zloyleva.utils.ReplacementTable;
-import org.zloyleva.utils.TemplateUtil;
+import org.zloyleva.utils.ViewUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,9 +23,7 @@ public class LoginController  implements HttpHandler  {
     try {
       if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
         ReplacementTable table = new ReplacementTable();
-        byte[] bytes = TemplateUtil.getHTMLBytes("login.html", table.getTable());
-        exchange.sendResponseHeaders(200, bytes.length);
-        os.write(bytes);
+        ViewUtil.sendHTML(exchange, "login.html", table.getTable());
       } else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody()));
@@ -50,10 +48,7 @@ public class LoginController  implements HttpHandler  {
           // validations!
 
           if (user != null && password != null) {
-            // redirect to home page
-            exchange.getResponseHeaders().add("Location", "http://localhost:5678/");
-            exchange.sendResponseHeaders(302, 0);
-            //os.close();
+            ViewUtil.sendRedirect(exchange);
           } else {
             ReplacementTable table = new ReplacementTable();
             table.setTableRow("@alert-login", """
@@ -61,16 +56,11 @@ public class LoginController  implements HttpHandler  {
                  Got an error during login process, call the support team)// After replace
                </div>
                """);
-            byte[] bytes = TemplateUtil.getHTMLBytes("login.html", table.getTable());
-            exchange.sendResponseHeaders(200, bytes.length);
-            os.write(bytes);
+            ViewUtil.sendHTML(exchange, "login.html", table.getTable());
           }
         }
       } else {
-        String response = "405 Method Not Allowed";
-        byte[] bytes = response.getBytes();
-        exchange.sendResponseHeaders(405, bytes.length);
-        os.write(response.getBytes());
+        ViewUtil.sendMethodNotAllowed(exchange);
       }
     } catch (Exception e) {
       System.out.println(e);
