@@ -17,7 +17,12 @@ public class ViewUtil {
 
   public static void sendRedirect (HttpExchange exchange, String sessionId) throws IOException {
     exchange.getResponseHeaders().add("Location", "http://localhost:5678/");
-    exchange.getResponseHeaders().add("Set-Cookie", "SESSION=" + sessionId);
+    if (sessionId != null) {
+      exchange.getResponseHeaders().add("Set-Cookie", "SESSION=" + sessionId);
+    } else {
+      exchange.getResponseHeaders().add("Set-Cookie", "SESSION=; Max-Age=0;");
+    }
+
     exchange.sendResponseHeaders(302, -1);
   }
 

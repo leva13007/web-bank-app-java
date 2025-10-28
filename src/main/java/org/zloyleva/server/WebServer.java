@@ -17,9 +17,9 @@ public class WebServer {
     UserService userService = new UserService();
 
     server.createContext("/", new HomeController(userService));
-    server.createContext("/login", new LoginController(userService));
-    server.createContext("/registration", new RegistrationController(userService));
-//    server.createContext("/logout", new HomeHandler());
+    server.createContext("/login", new LoginController(userService)); // only for guests
+    server.createContext("/registration", new RegistrationController(userService)); // only for guests
+    server.createContext("/logout", new LoginController(userService));
 
 
     System.out.println("Server is running on the port: " + port);
