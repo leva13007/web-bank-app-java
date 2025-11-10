@@ -7,12 +7,13 @@ public class ReplacementTable {
   public Map<String, String> table = new HashMap<String, String >();
 
   public ReplacementTable() {
+    this.table.put("@page-title", "Bank App | ");
     this.table.put("@alert-login", "");
     this.table.put("@alert-registration", "");
     this.table.put("@user-greeting", """
         <div class="text-end">
-            <a href="/login" type="button" class="btn btn-outline-light me-2">Login</a>
-            <a href="/registration" type="button" class="btn btn-warning">Registration</a>
+            <a href="/login" type="button" class="btn btn-outline-light me-2" data-testid="header-login-button">Login</a>
+            <a href="/registration" type="button" class="btn btn-warning" data-testid="header-registration-button">Registration</a>
         </div>
         """);
   }

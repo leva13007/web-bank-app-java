@@ -54,6 +54,7 @@ public class HomeController implements HttpHandler {
         }
 
         String user = userService.getUserBySessionId(sessionId);
+        table.setTableRow("@page-title", "Bank App | Home page");
         if (user != null) {
           table.setTableRow("@user-greeting", String.format("""
               <div class="text-end d-flex align-items-center" style="gap: 8px;">
