@@ -28,6 +28,7 @@ public class RegistrationController implements HttpHandler {
     try {
       if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
         ReplacementTable table = new ReplacementTable();
+        table.setTableRow("@page-title", "Bank App | Registration page");
         ViewUtil.sendHTML(exchange, "registration.html", table.getTable());
       } else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
 
@@ -64,6 +65,7 @@ public class RegistrationController implements HttpHandler {
                  Got an error during registration process, call the support team)
                </div>
                """);
+            table.setTableRow("@page-title", "Bank App | Registration page");
             ViewUtil.sendHTML(exchange, "registration.html", table.getTable());
           }
         }
