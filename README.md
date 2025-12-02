@@ -25,3 +25,9 @@ memory
 
 configs + envs!
 auth(Cognito!) 
+
+To run webserver from comand line:
+
+```bash
+mvn compile exec:java -Dexec.mainClass="org.zloyleva.server.WebServer"
+```

@@ -1,15 +1,16 @@
 package org.zloyleva.controller;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import org.zloyleva.service.UserService;
-import org.zloyleva.utils.ReplacementTable;
-import org.zloyleva.utils.ViewUtil;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+
+import org.zloyleva.service.UserService;
+import org.zloyleva.utils.ReplacementTable;
+import org.zloyleva.utils.ViewUtil;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
 public class RegistrationController implements HttpHandler {
   UserService userService;
@@ -61,8 +62,8 @@ public class RegistrationController implements HttpHandler {
           } else {
             ReplacementTable table = new ReplacementTable();
             table.setTableRow("@alert-registration", """
-               <div class="alert alert-danger" role="alert">
-                 Got an error during registration process, call the support team)
+               <div class="alert alert-danger" role="alert" data-testid="error-registration">
+                 Got an error during registration process, call the support team
                </div>
                """);
             table.setTableRow("@page-title", "Bank App | Registration page");
