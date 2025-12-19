@@ -2,18 +2,71 @@
     <div class="row my-5">
         <div class="col">
             <!-- @alert-registration -->
-            <form action="/registration" method="post" data-testid="registration-form">
+            <form action="/registration" method="post" data-testid="registration-form" id="registration-form">
                 <h1>Registration form</h1>
                 <div class="mb-3">
                     <label for="user" class="form-label">User name</label>
                     <input name="user" type="text" class="form-control" id="user" data-testid="user-name-input">
+                    <div class="invalid-feedback" id="error-user" aria-live="polite"></div>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input name="password" type="password" class="form-control" id="password" data-testid="user-password-input">
+                    <input name="password" type="password" class="form-control" id="password"
+                        data-testid="user-password-input">
+                    <div class="invalid-feedback" id="error-password" aria-live="polite"></div>
                 </div>
-                <button type="submit" class="btn btn-primary" data-testid="submit-button">Submit</button>
+                <button type="submit" class="btn btn-primary" data-testid="submit-button" id="submit-button">Submit</button>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('Registration page script loaded.');
+        
+        const form = document.getElementById('registration-form');
+        const errorUser = document.getElementById('error-user');
+        const errorPassword = document.getElementById('error-password');
+        const userInput = document.getElementById('user');
+        const passwordInput = document.getElementById('password');
+        const submitButton = document.getElementById('submit-button');
+
+        // const emailRegExp = /^[\w.!#$%&'*+/=?^`{|}~-]+@[a-z\d-]+(?:\.[a-z\d-]+)*$/i;
+        const passwordRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        const isValidUserName = () => {
+            const validity = userInput.value.length > 2; // Adjust validation logic as needed
+            return validity;
+        };
+
+        const isValidPassword = () => {
+            const validity = passwordInput.value.length !== 0 && passwordRegExp.test(passwordInput.value);
+            return validity;
+        };
+
+        form.addEventListener('submit', function (e) {
+            
+            errorUser.textContent = '';
+            errorPassword.textContent = '';
+            if (!isValidUserName()) {
+                errorUser.textContent = 'User name must be at least 3 characters long.';
+                userInput.classList.add('is-invalid');
+            } else {
+                userInput.classList.remove('is-invalid');
+            }
+            if (!isValidPassword()) {
+                errorPassword.textContent = 'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.';
+                passwordInput.classList.add('is-invalid');
+            } else {
+                passwordInput.classList.remove('is-invalid');
+            }
+            if (!isValidUserName() || !isValidPassword()) {
+                e.preventDefault();
+                return false;
+            }
+
+            submitButton.disabled = true;
+        });
+    });
+</script>
