@@ -1,12 +1,5 @@
 package org.zloyleva.controller;
 
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import org.zloyleva.service.UserService;
-import org.zloyleva.utils.ReplacementTable;
-import org.zloyleva.utils.ViewUtil;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,6 +7,14 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+
+import org.zloyleva.service.UserService;
+import org.zloyleva.utils.ReplacementTable;
+import org.zloyleva.utils.ViewUtil;
+
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
 public class LoginController  implements HttpHandler  {
   UserService userService;
@@ -32,6 +33,39 @@ public class LoginController  implements HttpHandler  {
     try {
       if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
         ReplacementTable table = new ReplacementTable();
+
+
+        String sessionId = null;
+
+        Headers headers = exchange.getRequestHeaders();
+        List<String> cookies = headers.get("Cookie");
+
+        if (cookies != null) {
+          for (String cookie : cookies) {
+//            System.out.println("Element: " + cookie);
+            String[] results = cookie.split(";");
+            for(String item: results){
+              String[] keyValue = item.split("=");
+              if (Objects.equals(keyValue[0].trim(), "SESSION")) {
+                sessionId = keyValue[1];
+                System.out.println("Home page got the sessionId: " + sessionId);
+                break;
+              }
+            }
+
+            if (sessionId != null) {
+              break;
+            }
+          }
+        }
+
+        String user = userService.getUserBySessionId(sessionId);
+        if (user != null && sessionId != null) {
+          // redirect to Home page
+          ViewUtil.sendRedirect(exchange, sessionId);
+        }
+
+        table.setTableRow("@page-title", "Bank App | Login page");
         ViewUtil.sendHTML(exchange, "login.html", table.getTable());
       } else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
 
@@ -96,10 +130,11 @@ public class LoginController  implements HttpHandler  {
             } else {
               ReplacementTable table = new ReplacementTable();
               table.setTableRow("@alert-login", """
-               <div class="alert alert-danger" role="alert">
-                 Got an error during login process, call the support team)// After replace
+               <div class="alert alert-danger" role="alert" data-testid="error-login">
+                 Got an error during login process, call the support team
                </div>
                """);
+              table.setTableRow("@page-title", "Bank App | Login page");
               ViewUtil.sendHTML(exchange, "login.html", table.getTable());
             }
           }

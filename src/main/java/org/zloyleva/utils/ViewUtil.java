@@ -1,10 +1,10 @@
 package org.zloyleva.utils;
 
-import com.sun.net.httpserver.HttpExchange;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
+
+import com.sun.net.httpserver.HttpExchange;
 
 public class ViewUtil {
   public static void sendHTML (HttpExchange exchange, String templateName, Map<String, String> htmlForReplace) throws IOException {
@@ -15,6 +15,7 @@ public class ViewUtil {
     }
   }
 
+  // Redirect to Home page
   public static void sendRedirect (HttpExchange exchange, String sessionId) throws IOException {
     exchange.getResponseHeaders().add("Location", "http://localhost:5678/");
     if (sessionId != null) {
